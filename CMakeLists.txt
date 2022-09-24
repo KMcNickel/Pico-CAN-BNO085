@@ -11,7 +11,10 @@ pico_sdk_init()
 add_executable(${PROJECT_NAME}
     main.cpp
     mcp2515.cpp
+    shtp.cpp
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE sh2)
 
 pico_add_extra_outputs(${PROJECT_NAME})
 

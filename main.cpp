@@ -8,6 +8,7 @@
 #include "hardware/pwm.h"
 #include "hardware/gpio.h"
 #include "hardware/watchdog.h"
+#include "include/shtp.h"
 
 #define VER_MAJOR       1
 #define VER_MINOR       0
@@ -23,8 +24,13 @@
 #define CAN_RECEIVE_MASK    0xE0
 #define CAN_RECEIVE_FILTER  (CAN_NODE_ID << 5)
 
-//Battery Interface
-
+//BNO085 IMU Interface
+#define BNO085_SCK_PIN 10
+#define BNO085_TX_PIN  11
+#define BNO085_RX_PIN  8
+#define BNO085_CS_PIN  9
+#define BNO085_INT_PIN 13
+#define BNO085_RST_PIN 12
 //CAN Interface
 #define CAN_SCK_PIN 2
 #define CAN_TX_PIN 3
@@ -50,6 +56,7 @@
 
 #define STDIO_UART_PERIPHERAL uart0
 #define CANBUS_SPI_PERIPHERAL spi0
+#define BNO085_SPI_PERIPHERAL spi1
 
 can_frame frame;
 uint8_t frameID = 0;
@@ -174,7 +181,8 @@ void peripheralStartup()
     printf("Setting up Pins and Peripherals...\n");
 
     startupCANBus();
-    setupTimer();
+    startupIMU(BNO085_SPI_PERIPHERAL, BNO085_CS_PIN);
+    //setupTimer();
 
     printf("Pins and Peripherals setup complete\n");
 
@@ -187,5 +195,8 @@ int main ()
     peripheralStartup();
 
     while(true)
-    { /*Don't do anything here, use timers instead*/ }
+    { /*Don't do anything here, use timers instead*/ 
+        //For now, we are ignoring ^ that line and disabling timers
+        serviceIMU();
+    }
 }
